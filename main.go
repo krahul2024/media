@@ -14,7 +14,7 @@ func main(){
     utils.SetEnv()
     PORT := os.Getenv("PORT")
 
-    router = routes.NewRouter();    
+    router := routes.NewRouter();    
     routes.Register(router);
 
     fmt.Println(fmt.Sprintf("Server runinng on the port: %v", PORT))

@@ -1,6 +1,9 @@
 package routes
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 func postRoutes(router *Router){
     router.HandleFunc("", listPosts)    
@@ -8,10 +11,10 @@ func postRoutes(router *Router){
 }
 
 func listPosts(w http.ResponseWriter, r *http.Request){
-
+    log.Println("from the route /post")
 }
 
 func createPost(w http.ResponseWriter, r *http.Request){
-
+    log.Println("from the route /post/create")
 }
 
