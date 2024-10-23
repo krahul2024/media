@@ -16,6 +16,7 @@ type UserStore interface {
     Add(name, username, email, city, country string) error
     GetAll() ([]User, error) 
     Get(id int) (User, error)
+    Update(id int, name, username, email, city, country string) error
 }
 
 type SQLUserStore struct {
@@ -59,4 +60,8 @@ func (s *SQLUserStore) Get(id int) (User, error) {
         ).Scan(&user.ID, &user.Name, &user.UserName, &user.Email, &user.City, &user.Country)
 
     return user, err
+}
+
+func (s *SQLUserStore) Update(id int, name, username, email, city, country string) error {
+    return nil
 }

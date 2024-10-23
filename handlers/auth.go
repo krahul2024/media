@@ -5,9 +5,11 @@ import (
 	"net/http"
 )
 
+type AuthHandler struct {
+   AuthService service.AuthService 
+}
 func Register(w http.ResponseWriter, r *http.Request) {
-   fmt.Println("this is register function"); 
-    return;
+
 }
 
 func Login (w http.ResponseWriter, r *http.Request) {
