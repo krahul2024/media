@@ -1,20 +1,25 @@
 package route
 
 import (
-	"media/handler"
+    "media/handler"
 
-	"net/http"
+    "net/http"
 )
 
-func FileRoutes() *http.ServeMux {
+type FileRouter struct {
+    FileHandler handler.FileHandler
+}
+
+func (r *FileRouter) Routes() *http.ServeMux {
     mux := http.NewServeMux()
 
-    mux.HandleFunc("GET /all", handler.GetAllFiles)
-    mux.HandleFunc("POST /new", handler.CreateNewFile)
-    mux.HandleFunc("GET /{id}/info", handler.GetFileInfo)
-    mux.HandleFunc("GET /{id}/load", handler.LoadFile)
-    mux.HandleFunc("GET /{id}/update", handler.UpdateFile)
-    mux.HandleFunc("GET /{id}/delete", handler.DeleteFile)
+    mux.HandleFunc("GET /all", r.FileHandler.GetAllFiles)
+    mux.HandleFunc("POST /new", r.FileHandler.CreateNewFile)
+    mux.HandleFunc("GET /{id}/info", r.FileHandler.GetFileInfo)
+    mux.HandleFunc("GET /{id}/load", r.FileHandler.LoadFile)
+    mux.HandleFunc("GET /{id}/update", r.FileHandler.UpdateFile)
+    mux.HandleFunc("GET /{id}/delete", r.FileHandler.DeleteFile)
 
     return mux
 }
+

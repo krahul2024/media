@@ -2,17 +2,51 @@ package main
 
 import (
 	"bufio"
+	"database/sql"
 	"fmt"
 	"log"
+	"media/db"
+	"media/handler"
 	"media/route"
+	"media/service"
 	"net/http"
 	"os"
 	"strings"
+
+	_ "github.com/lib/pq"
 )
+
+type server struct {
+    FileRouter route.FileRouter
+}
+
 
 func main() {
     setEnvs()
     PORT := os.Getenv("PORT")
+    DB_NAME := os.Getenv("DB_NAME")
+    DB_USER := os.Getenv("DB_USER")
+    DB_PASSWORD := os.Getenv("DB_PASSWORD")
+    DB_HOST := os.Getenv("DB_HOST")
+    DB_PORT := os.Getenv("DB_PORT")
+
+    dbURL := fmt.Sprintf(
+        "postgres://%v:%v@%v:%v/%v?sslmode=disable",
+        DB_USER, DB_PASSWORD,
+        DB_HOST, DB_PORT,
+        DB_NAME,
+        )
+
+    dbConn, err := sql.Open("postgres", dbURL)
+    if err != nil {
+        log.Fatalf("db connection error, exiting...")
+        return
+    }
+
+    fileModel := &db.SQLFileModel{DB: dbConn}
+    fileService := service.FileService{FileModel: fileModel}
+    fileHandler := handler.FileHandler{ FileService: fileService }
+
     if len(PORT) == 0 || PORT == "" {
         log.Fatalln("PORT Not found, exiting...")
         return
@@ -20,8 +54,6 @@ func main() {
 
     serveMux := http.NewServeMux()
 
-    fileRoute := route.FileRoutes()
-    serveMux.Handle("/api/file/", http.StripPrefix("/api/file", fileRoute))
 
     log.Println("Starting the server at PORT: ", PORT)
     if err := http.ListenAndServe(
